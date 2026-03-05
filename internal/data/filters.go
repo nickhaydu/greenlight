@@ -1,6 +1,9 @@
 package data
 
-import "greenlight-nickhaydu/internal/validator"
+import (
+	"greenlight-nickhaydu/internal/validator"
+	"strings"
+)
 
 type Filters struct {
 	Page         int
@@ -15,4 +18,30 @@ func ValidateFilters(v *validator.Validator, f Filters) {
 	v.Check(f.PageSize > 0, "page_size", "must be greater than zero")
 	v.Check(f.PageSize <= 100, "page_size", "must be a maximum of 100")
 	v.Check(validator.In(f.Sort, f.SortSafelist...), "sort", "invalid sort value")
+}
+
+func (f Filters) sortColumn() string {
+	for _, safeVale := range f.SortSafelist {
+		if f.Sort == safeVale {
+			return strings.TrimPrefix(f.Sort, "-")
+		}
+	}
+
+	panic("unsafe sort parameter: " + f.Sort)
+}
+
+func (f Filters) sortDirections() string {
+	if strings.HasPrefix(f.Sort, "-") {
+		return "DESC"
+	}
+
+	return "ASC"
+}
+
+func (f Filters) limit() int {
+	return f.PageSize
+}
+
+func (f Filters) offset() int {
+	return (f.Page - 1) * f.PageSize
 }

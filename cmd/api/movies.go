@@ -183,7 +183,7 @@ func (app *application) listMoviesHandler(w http.ResponseWriter, r *http.Request
 
 	input.Title = app.readString(qs, "title", "")
 	input.Genres = app.readCSV(qs, "genres", []string{})
-	input.Filters.Page = app.readInt(qs, "page", 20, v)
+	input.Filters.Page = app.readInt(qs, "page", 1, v)
 	input.Filters.PageSize = app.readInt(qs, "page_size", 20, v)
 	input.Filters.Sort = app.readString(qs, "sort", "id")
 
