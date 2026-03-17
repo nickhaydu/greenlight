@@ -99,7 +99,7 @@ func (m MovieModel) Update(movie *Movie) error {
 	args := []interface{}{movie.Title, movie.Year, movie.Runtime, pq.Array(movie.Genres), movie.ID, movie.Version}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	cancel()
+	defer cancel()
 
 	err := m.DB.QueryRowContext(ctx, query, args...).Scan(&movie.Version)
 	if err != nil {
