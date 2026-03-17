@@ -121,7 +121,7 @@ func (m MovieModel) Delete(id int64) error {
 	query := `DELETE FROM movies WHERE id = $1`
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	cancel()
+	defer cancel()
 
 	result, err := m.DB.ExecContext(ctx, query, id)
 	if err != nil {
