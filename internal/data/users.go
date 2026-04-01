@@ -11,6 +11,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+var AnonymousUser = &User{}
+
+var ErrDuplicateEmail = errors.New("duplicate email")
+
 type User struct {
 	ID        int64     `json:"id"`
 	CreatedAt time.Time `json:"created_at"`
@@ -30,7 +34,9 @@ type UserModel struct {
 	DB *sql.DB
 }
 
-var ErrDuplicateEmail = errors.New("duplicate email")
+func (u *User) isAnonymous() bool {
+	return u == AnonymousUser
+}
 
 func (p *password) Set(plaintextPassword string) error {
 	hash, err := bcrypt.GenerateFromPassword([]byte(plaintextPassword), 12)
